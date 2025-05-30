@@ -5,28 +5,51 @@ import math
 # Define zone class
 class Zone:
     """
-    This class represents the initial zone in a battle royale game.
-    The zone shrinks over time, and players must stay within the zone to avoid damage.
-    The zone has a center point and a radius that defines its size.
-    The zone shrinks by a fixed amount each round, and players outside the zone take damage.
-    The zone is represented as a circle on a 2D plane.
+    Represents the dynamic safe zone in a battle royale game.
+
+    The zone is modeled as a circle on a 2D plane, with a center point (center_x, center_y) and a radius.
+    Over time (each round), the zone shrinks to encourage player movement and encounters.
+    Players outside the zone take damage, so they must stay within the zone to survive.
+
+    Attributes:
+        radius (float): The current radius of the zone.
+        center_x (float): The X-coordinate of the zone's center.
+        center_y (float): The Y-coordinate of the zone's center.
+        shrink_rate (float): The amount by which the radius shrinks each round.
     """
 
     def __init__(self):
-        self.radius = 100  # Initial radius of the zone
-        self.center_x = 0  # X-coordinate of the center of the zone
-        self.center_y = 0  # Y-coordinate of the center of the zone
-        self.shrink_rate = 10  # How fast the zone shrinks per round
+        """Initializes the zone with default radius and center point."""
+        self.radius = 100  # Initial size of the zone
+        self.center_x = 0  # Zone starts centered at origin (0, 0)
+        self.center_y = 0
+        self.shrink_rate = 10  # Zone shrinks by 10 units each round
 
     def shrink(self):
-        """Shrinks the zone by the shrink_rate each round."""
-        self.radius -= self.shrink_rate
+        """
+        Shrinks the zone's radius by the shrink_rate.
+
+        The radius will not shrink below a minimum value (5 units),
+        to ensure there is still a small play area left at the end of the game.
+        """
+        self.radius -= self.shrink_rate  # Reduce the radius
         if self.radius < 5:
-            self.radius = 5  # Ensure the radius doesn't go below a small enough space for players to fight in
+            self.radius = 5  # Clamp to minimum allowed radius
 
     def is_inside(self, player_x, player_y):
-        """Checks if the player is inside the current zone."""
+        """
+        Checks if a player is inside the current zone.
+
+        Args:
+            player_x (float): The X-coordinate of the player.
+            player_y (float): The Y-coordinate of the player.
+
+        Returns:
+            bool: True if the player is within the zone radius, False otherwise.
+        """
+        # Calculate distance from the player to the center of the zone
         distance = math.sqrt(
             (self.center_x - player_x) ** 2 + (self.center_y - player_y) ** 2
         )
+        # Player is inside the zone if their distance is less than or equal to the radius
         return distance <= self.radius
