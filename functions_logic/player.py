@@ -609,7 +609,7 @@ class Final_Player:
         self.age_multiplier = self.get_age_multiplier()
         self.background_multiplier = self.get_background_multiplier()
         self.strategy_multiplier = self.get_strategy_multiplier()
-        self.weapon_multiplier = 1.5 if has_weapon else 1.0
+        self.weapon_multiplier = 1.5 if self.has_weapon else 1.0
         self.gender_multiplier = self.get_gender_multiplier()
 
     def get_age_multiplier(self):
